@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		245C8E7D19141996007ABE8F /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = 245C8E7A19141996007ABE8F /* UIView+Glow.m */; };
 		EB686DE218ABCAA200BC11E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB686DE118ABCAA200BC11E5 /* Foundation.framework */; };
 		EB686DE418ABCAA200BC11E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB686DE318ABCAA200BC11E5 /* CoreGraphics.framework */; };
 		EB686DE618ABCAA200BC11E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB686DE518ABCAA200BC11E5 /* UIKit.framework */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		245C8E7919141996007ABE8F /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
+		245C8E7A19141996007ABE8F /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
 		EB686DDE18ABCAA200BC11E5 /* ProductTour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProductTour.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB686DE118ABCAA200BC11E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB686DE318ABCAA200BC11E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -90,9 +93,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		245C8E7519141996007ABE8F /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				245C8E7619141996007ABE8F /* UIView-Glow */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		245C8E7619141996007ABE8F /* UIView-Glow */ = {
+			isa = PBXGroup;
+			children = (
+				245C8E7919141996007ABE8F /* UIView+Glow.h */,
+				245C8E7A19141996007ABE8F /* UIView+Glow.m */,
+			);
+			path = "UIView-Glow";
+			sourceTree = "<group>";
+		};
 		EB686DD518ABCAA200BC11E5 = {
 			isa = PBXGroup;
 			children = (
+				245C8E7519141996007ABE8F /* lib */,
 				EB686DE718ABCAA200BC11E5 /* ProductTour */,
 				EB686E0618ABCAA200BC11E5 /* ProductTourTests */,
 				EB686DE018ABCAA200BC11E5 /* Frameworks */,
@@ -281,6 +302,7 @@
 				EB686DF218ABCAA200BC11E5 /* CRAppDelegate.m in Sources */,
 				EB686E1818ABCB6800BC11E5 /* CRBubble.m in Sources */,
 				EB686DF818ABCAA200BC11E5 /* CRViewController.m in Sources */,
+				245C8E7D19141996007ABE8F /* UIView+Glow.m in Sources */,
 				EB686E2118ACE69E00BC11E5 /* CRViewController2.m in Sources */,
 				EB686E1C18ABCE7A00BC11E5 /* CRProductTour.m in Sources */,
 			);

@@ -7,6 +7,8 @@
 //
 
 #import "CRProductTour.h"
+#import "UIView+Glow.h"
+
 #define ANIMATION_TRANSLATION 30
 #define ANIMATION_DURATION 0.25
 
@@ -43,6 +45,9 @@ static NSMutableArray *arrayOfAllocatedTours;
             [self addSubview:bubble];
             if(!tourVisible)
                 [bubble setAlpha:0.0];
+            else if (bubble.glowEnable)
+                [bubble.attachedView startGlowingWithColor:[UIColor whiteColor] intensity:1.0 duration:1.0 repeat:3];
+
         }
     }
 }
@@ -92,7 +97,8 @@ static NSMutableArray *arrayOfAllocatedTours;
                              scaleDown2.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.15, 1.15, 1.15)];
                              scaleDown2.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1, 1, 1)];
                              [bubble.attachedView.layer addAnimation:scaleDown2 forKey:nil];
-                             
+                             [bubble.attachedView stopGlowing];
+
                              
                          }];
     }
@@ -110,11 +116,13 @@ static NSMutableArray *arrayOfAllocatedTours;
 
 -(void)makeAppearAnimation:(CRBubble*)bubble;
 {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:ANIMATION_DURATION];
-    bubble.transform=CGAffineTransformIdentity;
-    [bubble setAlpha:1.0];
-    [UIView commitAnimations];
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        bubble.transform=CGAffineTransformIdentity;
+        [bubble setAlpha:1.0];
+    } completion:^(BOOL finished) {
+        if (bubble.glowEnable)
+            [bubble.attachedView startGlowingWithColor:[UIColor yellowColor] intensity:1.0 duration:1.0 repeat:3];
+    }];
 }
 
 -(void) refreshBubblesVisibility
@@ -127,8 +135,7 @@ static NSMutableArray *arrayOfAllocatedTours;
             {
                 
                 [self makeAppearAnimation:bubble];
-                
-                
+
             }
             else
             {

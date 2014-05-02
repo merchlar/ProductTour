@@ -1,0 +1,3 @@
+[submodule "lib/UIView-Glow"]
+	path = lib/UIView-Glow
+	url = https://github.com/hefgi/UIView-Glow.git

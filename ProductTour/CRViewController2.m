@@ -25,7 +25,7 @@
     
     //SET BUBBLES TOUR VIEWS
     
-    CRBubble *bubbleButton1 = [[CRBubble alloc] initWithAttachedView:_button1 title:@"Multiview control" description:@"You can activate/desactivate \nhelp from other view controllers \nit wi affect all your App \nProduct Tour bubbles" arrowPosition:CRArrowPositionBottom andColor:COLOR_DARK_MANGENTA];
+    CRBubble *bubbleButton1 = [[CRBubble alloc] initWithAttachedView:_button1 title:@"Multiview control" description:@"You can activate/desactivate \nhelp from other view controllers \nit wi affect all your App \nProduct Tour bubbles" arrowPosition:CRArrowPositionBottom andColor:COLOR_DARK_MANGENTA andGlow:YES];
     
     NSMutableArray *bubbleArray = [[NSMutableArray alloc] initWithObjects:bubbleButton1, nil];
     

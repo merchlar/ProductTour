@@ -22,7 +22,7 @@
 #pragma mark - Constructor
 
 
--(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow
 {
     self = [super init];
     if(self)
@@ -35,6 +35,7 @@
         self.title = title;
         self.description = description;
         self.arrowPosition = arrowPosition;
+        self.glowEnable = glow;
         [self setBackgroundColor:[UIColor clearColor]];
         if(fontName==NULL)
             fontName=@"BebasNeue";
@@ -92,6 +93,11 @@
     [self setFrame:[self frame]];
     [self setNeedsDisplay];
     return self;
+}
+
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color {
+    
+    return [self initWithAttachedView:view title:title description:description arrowPosition:arrowPosition andColor:color andGlow:YES];
 }
 
 
