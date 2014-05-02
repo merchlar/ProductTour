@@ -11,6 +11,7 @@
 #define CR_RADIUS 6
 #define COLOR_GLUE_BLUE [UIColor colorWithRed:0.0 green:0.48 blue:1.0 alpha:1.0]
 #define COLOR_DARK_GRAY [UIColor colorWithWhite:0.13 alpha:1.0]
+#define COLOR_WHITE [UIColor whiteColor]
 #define CR_TITLE_FONT_SIZE 24
 #define CR_DESCRIPTION_FONT_SIZE 14
 
@@ -36,6 +37,7 @@
         self.description = description;
         self.arrowPosition = arrowPosition;
         self.glowEnable = glow;
+        self.glowColor = COLOR_WHITE;
         [self setBackgroundColor:[UIColor clearColor]];
         if(fontName==NULL)
             fontName=@"BebasNeue";
