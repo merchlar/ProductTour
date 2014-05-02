@@ -26,7 +26,9 @@ typedef enum {
     CRArrowPositionTop,
     CRArrowPositionBottom,
     CRArrowPositionRight,
-    CRArrowPositionLeft
+    CRArrowPositionLeft,
+    CRArrowPositionAllTop,
+    CRArrowPositionAllBottom
 } CRArrowPosition;
 
 @property (nonatomic, strong) UIView *attachedView;

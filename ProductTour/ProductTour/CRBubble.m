@@ -129,9 +129,15 @@
     {
         x+=self.attachedView.frame.size.width/2-[self size].width/2;
         y+=(self.arrowPosition==CRArrowPositionTop)? CR_ARROW_SPACE+self.attachedView.frame.size.height : -(CR_ARROW_SPACE*2+[self size].height);
+    }else if(self.arrowPosition==CRArrowPositionAllTop||self.arrowPosition==CRArrowPositionAllBottom) {
+        x = 0;
+        y+=(self.arrowPosition==CRArrowPositionAllTop)? CR_ARROW_SPACE+self.attachedView.frame.size.height : -(CR_ARROW_SPACE*2+[self size].height);
     }
     
-    float width = [self size].width+CR_ARROW_SIZE;
+//    float width = [self size].width+CR_ARROW_SIZE;
+//    float height = [self size].height+CR_ARROW_SIZE;
+    
+    float width = [self size].width;
     float height = [self size].height+CR_ARROW_SIZE;
     
     if (x + width > [[UIScreen mainScreen] bounds].size.width && width < [[UIScreen mainScreen] bounds].size.width)
@@ -143,6 +149,8 @@
         y = [[UIScreen mainScreen] bounds].size.height - height;
     else if (y < 0)
         y = 0;
+    
+    NSLog(@"frame x : %f y : %f", x, y);
     
     return CGRectMake(x, y, width, height);
 }
@@ -174,12 +182,16 @@
         width+=titleWidth;
     }
     
+    if(self.arrowPosition==CRArrowPositionAllTop||self.arrowPosition==CRArrowPositionAllBottom) {
+        width = [[UIScreen mainScreen] bounds].size.width;
+    }
+    
     return CGSizeMake(width, height);
 }
 
 -(CGSize) offsets
 {
-    return CGSizeMake((self.arrowPosition==CRArrowPositionLeft)? CR_ARROW_SIZE : 0, (self.arrowPosition==CRArrowPositionTop)? CR_ARROW_SIZE : 0);
+    return CGSizeMake((self.arrowPosition==CRArrowPositionLeft)? CR_ARROW_SIZE : 0, (self.arrowPosition==CRArrowPositionTop||self.arrowPosition==CRArrowPositionAllTop)? CR_ARROW_SIZE : 0);
 }
 
 
@@ -189,8 +201,11 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
     
-    
-    CGPathRef clippath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake([self offsets].width,[self offsets].height, [self size].width, [self size].height) cornerRadius:CR_RADIUS].CGPath;
+    float cornerRadius = CR_RADIUS;
+    if (self.arrowPosition == CRArrowPositionAllTop || self.arrowPosition == CRArrowPositionAllBottom) {
+        cornerRadius = 0;
+    }
+    CGPathRef clippath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake([self offsets].width,[self offsets].height, [self size].width, [self size].height) cornerRadius:cornerRadius].CGPath;
     CGContextAddPath(ctx, clippath);
     
     CGContextSetFillColorWithColor(ctx, self.color.CGColor);
@@ -213,12 +228,13 @@
     [path addLineToPoint:startPoint];
     
     
-    if(self.arrowPosition==CRArrowPositionTop)
+    if(self.arrowPosition==CRArrowPositionTop || self.arrowPosition==CRArrowPositionAllTop)
     {
         float xPosition = CGRectGetMidX(self.attachedView.frame) - CGRectGetMinX(self.frame) -(CR_ARROW_SIZE)/2;
+        NSLog(@"xPosition : %f", xPosition);
         CGAffineTransform trans = CGAffineTransformMakeTranslation(xPosition, 0);
         [path applyTransform:trans];
-    }else if(self.arrowPosition==CRArrowPositionBottom)
+    }else if(self.arrowPosition==CRArrowPositionBottom || self.arrowPosition==CRArrowPositionAllBottom)
     {
         float xPosition = CGRectGetMidX(self.attachedView.frame) - CGRectGetMinX(self.frame) -(CR_ARROW_SIZE)/2;
         CGAffineTransform rot = CGAffineTransformMakeRotation(M_PI);
