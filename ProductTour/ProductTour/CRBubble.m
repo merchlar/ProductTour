@@ -94,6 +94,39 @@
     return self;
 }
 
+-(id)initWithBar:(id)bar buttonPosition:(int)index title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color {
+    
+    self = [self initWithAttachedView:[self getViewForBar:bar withIndex:index] title:title description:description arrowPosition:arrowPosition andColor:color];
+
+    if (self) {
+        self.attachedBar = bar;
+        [self setFrame:[self frame]];
+        [self setNeedsDisplay];
+    }
+    
+    return self;
+    
+}
+
+- (UIView *)getViewForBar:(id)bar withIndex:(int)index {
+    
+    UINavigationBar * navBar = bar;
+    
+    NSMutableArray* buttons = [[NSMutableArray alloc] init];
+    for (UIControl* btn in navBar.subviews)
+        if ([btn isKindOfClass:[UIControl class]])
+            [buttons addObject:btn];
+    UIView* view;
+    if (index < [buttons count]) {
+        view = [buttons objectAtIndex:index];
+    }
+    
+    NSLog(@"YO VIEW %@", view);
+    
+    return view;
+    
+}
+
 
 #pragma mark - Customs methods
 
@@ -110,9 +143,15 @@
 
 -(CGRect)frame
 {
+    
+    float x = 0;
+    float y = 0;
+    float width = 0;
+    float height = 0;
+    
     //Calculation of the bubble position
-    float x = self.attachedView.frame.origin.x;
-    float y = self.attachedView.frame.origin.y;
+    x = self.attachedView.frame.origin.x;
+    y = self.attachedView.frame.origin.y;
     
     if(self.arrowPosition==CRArrowPositionLeft||self.arrowPosition==CRArrowPositionRight)
     {
@@ -124,9 +163,15 @@
         x+=self.attachedView.frame.size.width/2-[self size].width/2;
         y+=(self.arrowPosition==CRArrowPositionTop)? CR_ARROW_SPACE+self.attachedView.frame.size.height : -(CR_ARROW_SPACE*2+[self size].height);
     }
-    
-    float width = [self size].width+CR_ARROW_SIZE;
-    float height = [self size].height+CR_ARROW_SIZE;
+
+    if (self.attachedBar) {
+        UIView * view = self.attachedBar;
+        y+= view.frame.origin.y;
+    }
+
+
+    width = [self size].width+CR_ARROW_SIZE;
+    height = [self size].height+CR_ARROW_SIZE;
     
     if (x + width > [[UIScreen mainScreen] bounds].size.width && width < [[UIScreen mainScreen] bounds].size.width)
         x = [[UIScreen mainScreen] bounds].size.width - width;
@@ -214,14 +259,14 @@
         [path applyTransform:trans];
     }else if(self.arrowPosition==CRArrowPositionBottom)
     {
-        float xPosition = CGRectGetMidX(self.attachedView.frame) - CGRectGetMinX(self.frame) -(CR_ARROW_SIZE)/2;
+        float xPosition = CGRectGetMidX(self.attachedView.frame) - CGRectGetMinX(self.frame) +(CR_ARROW_SIZE)/2;
         CGAffineTransform rot = CGAffineTransformMakeRotation(M_PI);
         CGAffineTransform trans = CGAffineTransformMakeTranslation(xPosition, [self size].height+CR_ARROW_SIZE);
         [path applyTransform:rot];
         [path applyTransform:trans];
     }else if(self.arrowPosition==CRArrowPositionLeft)
     {
-        float yPosition = CGRectGetMidY(self.attachedView.frame) - CGRectGetMinY(self.frame) -(CR_ARROW_SIZE)/2;
+        float yPosition = CGRectGetMidY(self.attachedView.frame) - CGRectGetMinY(self.frame) +(CR_ARROW_SIZE)/2;
         CGAffineTransform rot = CGAffineTransformMakeRotation(M_PI*1.5);
         CGAffineTransform trans = CGAffineTransformMakeTranslation(0, yPosition);
         [path applyTransform:rot];
