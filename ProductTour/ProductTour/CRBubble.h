@@ -41,6 +41,8 @@ typedef enum {
 @property (nonatomic, strong) UIColor *glowColor;
 @property BOOL glowEnable;
 
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition color:(UIColor*)color glow:(BOOL)glow andTextAlignement:(NSTextAlignment)textAlignement;
+
 -(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow;
 -(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color;
 

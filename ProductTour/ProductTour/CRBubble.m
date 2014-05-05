@@ -7,13 +7,15 @@
 //
 
 #import "CRBubble.h"
-#define CR_PADDING 8
+#define CR_PADDING 15
+#define CR_TEXT_PADDING 5
+
 #define CR_RADIUS 6
 #define COLOR_GLUE_BLUE [UIColor colorWithRed:0.0 green:0.48 blue:1.0 alpha:1.0]
 #define COLOR_DARK_GRAY [UIColor colorWithWhite:0.13 alpha:1.0]
 #define COLOR_WHITE [UIColor whiteColor]
 #define CR_TITLE_FONT_SIZE 24
-#define CR_DESCRIPTION_FONT_SIZE 14
+#define CR_DESCRIPTION_FONT_SIZE 15
 
 #define SHOW_ZONE NO
 
@@ -22,9 +24,8 @@
 
 #pragma mark - Constructor
 
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition color:(UIColor*)color glow:(BOOL)glow andTextAlignement:(NSTextAlignment)textAlignement {
 
--(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow
-{
     self = [super init];
     if(self)
     {
@@ -40,7 +41,7 @@
         self.glowColor = COLOR_WHITE;
         [self setBackgroundColor:[UIColor clearColor]];
         if(fontName==NULL)
-            fontName=@"BebasNeue";
+            fontName=@"Helvetica";
     }
     
     float actualXPosition = [self offsets].width+CR_PADDING;
@@ -50,7 +51,7 @@
     
     if (self.title && ![self.title isEqualToString:@""]) {
         titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(actualXPosition, actualYPosition, actualWidth, actualHeight)];
-        [titleLabel setTextColor:[UIColor blackColor]];
+        [titleLabel setTextColor:COLOR_WHITE];
         [titleLabel setAlpha:0.6];
         [titleLabel setFont:[UIFont fontWithName:fontName size:CR_TITLE_FONT_SIZE]];
         [titleLabel setText:title];
@@ -59,7 +60,7 @@
     }
     
     if (!self.title || [self.title isEqualToString:@""])
-        actualYPosition = [self offsets].height;
+        actualYPosition = [self offsets].height+CR_PADDING;
     
     
     stringArray=[self.description componentsSeparatedByString:@"\n"];
@@ -69,14 +70,15 @@
         if (self.title && ![self.title isEqualToString:@""])
             actualYPosition+=actualHeight;
         
-        actualWidth =self.frame.size.width;
-        actualHeight =CR_DESCRIPTION_FONT_SIZE;
-        
-        UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(actualXPosition, actualYPosition, actualWidth, actualHeight+CR_ARROW_SPACE)];
-        [descriptionLabel setTextColor:COLOR_DARK_GRAY];
+        actualWidth =self.frame.size.width - (CR_PADDING*2);
+        actualHeight =CR_DESCRIPTION_FONT_SIZE +CR_TEXT_PADDING;
+
+        UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(actualXPosition, actualYPosition, actualWidth, actualHeight)];
+        [descriptionLabel setTextColor:COLOR_WHITE];
         [descriptionLabel setFont:[UIFont systemFontOfSize:CR_DESCRIPTION_FONT_SIZE]];
         [descriptionLabel setText:descriptionLine];
         [descriptionLabel setBackgroundColor:[UIColor clearColor]];
+        [descriptionLabel setTextAlignment:textAlignement];
         [self addSubview:descriptionLabel];
         
         if (!self.title || [self.title isEqualToString:@""])
@@ -95,6 +97,14 @@
     [self setFrame:[self frame]];
     [self setNeedsDisplay];
     return self;
+}
+
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow {
+    
+    self = [self initWithAttachedView:view title:title description:description arrowPosition:arrowPosition color:color glow:glow andTextAlignement:NSTextAlignmentLeft];
+
+    return self;
+    
 }
 
 -(id)initWithBar:(id)bar buttonPosition:(int)index title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow{
@@ -184,8 +194,8 @@
     }
 
 
-    width = [self size].width+CR_ARROW_SIZE;
-    height = [self size].height+CR_ARROW_SIZE;
+    width = [self size].width;
+    height = [self size].height;
     
     if (x + width > [[UIScreen mainScreen] bounds].size.width && width < [[UIScreen mainScreen] bounds].size.width)
         x = [[UIScreen mainScreen] bounds].size.width - width;
@@ -203,7 +213,11 @@
 -(CGSize)size
 {
     //Cacultation of the bubble size
-    float height = CR_PADDING*3;
+    float height = 0;
+    if(self.title && ![self.title isEqual:@""])
+        height = (CR_PADDING*3)+CR_ARROW_SIZE;
+    else
+        height = (CR_PADDING*2)+CR_ARROW_SIZE;
     float width = CR_PADDING*3;
     
     float titleWidth = 0;
@@ -223,9 +237,11 @@
         height+=CR_TITLE_FONT_SIZE+CR_PADDING;
         
     }
-    height-=CR_DESCRIPTION_FONT_SIZE;
+//    height-=CR_DESCRIPTION_FONT_SIZE;
     float descriptionWidth=0;
-    for (NSString *descriptionLine in  stringArray) {
+    for (int i = 0; i < [stringArray count]; i++) {
+ 
+        NSString *descriptionLine = [stringArray objectAtIndex:i];
         
         float stringWidth = 0;
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
@@ -241,7 +257,10 @@
         
         if (descriptionWidth < stringWidth)
             descriptionWidth = stringWidth;
-        height+=CR_DESCRIPTION_FONT_SIZE;
+        if (i == [stringArray count] - 1)
+            height+=(CR_DESCRIPTION_FONT_SIZE);
+        else
+            height+=(CR_DESCRIPTION_FONT_SIZE + CR_TEXT_PADDING);
     }
     
     if (descriptionWidth>titleWidth) {

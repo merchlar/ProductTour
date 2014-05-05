@@ -46,7 +46,7 @@ static NSMutableArray *arrayOfAllocatedTours;
             if(!tourVisible)
                 [bubble setAlpha:0.0];
             else if (bubble.glowEnable)
-                [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:3];
+                [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:30];
 
         }
     }
@@ -121,7 +121,7 @@ static NSMutableArray *arrayOfAllocatedTours;
         [bubble setAlpha:1.0];
     } completion:^(BOOL finished) {
         if (bubble.glowEnable)
-            [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:3];
+            [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:30];
     }];
 }
 
