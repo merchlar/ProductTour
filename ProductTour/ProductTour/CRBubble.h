@@ -32,6 +32,7 @@ typedef enum {
 } CRArrowPosition;
 
 @property (nonatomic, strong) UIView *attachedView;
+@property (nonatomic, strong) id attachedBar;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic, assign) CRArrowPosition arrowPosition;
@@ -42,6 +43,9 @@ typedef enum {
 
 -(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow;
 -(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color;
+
+-(id)initWithBar:(id)bar buttonPosition:(int)index title:(NSString*)title description:(NSString*)description arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andGlow:(BOOL)glow;
+
 -(CGSize)size;
 -(CGRect)frame;
 @end
