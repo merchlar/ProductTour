@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "CRBubble.h"
 
+//typedef void(^CRProductTourCallbackCompletionBlock)(BOOL finished);
+
+
 @interface CRProductTour : UIView
 
 @property (nonatomic, strong)  NSMutableArray *bubblesArray;
 -(void)setBubbles:(NSMutableArray*)arrayOfBubbles;
--(void)setVisible:(bool)visible;
+//-(void)setVisible:(bool)visible;
 -(BOOL)isVisible;
+
+-(void)setVisible:(bool)visible completion:(void(^)(BOOL finished))completion;
 @end

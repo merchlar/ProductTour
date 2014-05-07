@@ -12,11 +12,16 @@
 #define ANIMATION_TRANSLATION 30
 #define ANIMATION_DURATION 0.25
 
+@interface CRProductTour ()
+
+@property (copy) void (^completionBlock)(BOOL finished);
+
+@end
+
 @implementation CRProductTour
 static BOOL tourVisible=YES;
 static BOOL activeAnimation=YES; //Active bubbles translations and animatins for dismiss/appear
 static NSMutableArray *arrayOfAllocatedTours;
-
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -52,10 +57,21 @@ static NSMutableArray *arrayOfAllocatedTours;
     }
 }
 
--(void)setVisible:(bool)visible
-{
+//-(void)setVisible:(bool)visible
+//{
+//    [self setVisible:visible completion:^(BOOL finished) {
+//        
+//    }];
+//}
+
+-(void)setVisible:(bool)visible completion:(void(^)(BOOL finished))completion {
+    
     tourVisible=visible;
+    
+    self.completionBlock = completion;
+    
     [self refreshBubblesVisibility];
+
 }
 
 -(BOOL)isVisible
@@ -65,6 +81,10 @@ static NSMutableArray *arrayOfAllocatedTours;
 
 -(void)makeDismissAnimation:(CRBubble*)bubble;
 {
+    
+    __typeof(self) __weak weakSelf = self;
+
+    
     if(activeAnimation)
     {
         CGAffineTransform moveTransform;
@@ -91,6 +111,12 @@ static NSMutableArray *arrayOfAllocatedTours;
                          }
                          completion:^(BOOL finished){
                              
+                             [CATransaction begin];
+                             
+                             [CATransaction setCompletionBlock:^{
+                                 weakSelf.completionBlock(YES);
+                                 weakSelf.completionBlock = nil;
+                             }];
                              
                              CABasicAnimation* scaleDown2 = [CABasicAnimation animationWithKeyPath:@"transform"];
                              scaleDown2.duration = 0.2;
@@ -100,14 +126,19 @@ static NSMutableArray *arrayOfAllocatedTours;
                              [bubble.attachedView stopGlowing];
 
                              
+                             [CATransaction commit];
                          }];
     }
     else
     {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:ANIMATION_DURATION];
-        [bubble setAlpha:0.0];
-        [UIView commitAnimations];
+        
+        [UIView animateWithDuration:ANIMATION_DURATION
+                         animations:^{
+                             [bubble setAlpha:0.0];
+                         } completion:^(BOOL finished) {
+                             weakSelf.completionBlock(YES);
+                             weakSelf.completionBlock = nil;
+                         }];
     }
     
     
@@ -116,12 +147,17 @@ static NSMutableArray *arrayOfAllocatedTours;
 
 -(void)makeAppearAnimation:(CRBubble*)bubble;
 {
+    
+    __typeof(self) __weak weakSelf = self;
+
     [UIView animateWithDuration:ANIMATION_DURATION animations:^{
         bubble.transform=CGAffineTransformIdentity;
         [bubble setAlpha:1.0];
     } completion:^(BOOL finished) {
         if (bubble.glowEnable)
             [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:30];
+        weakSelf.completionBlock(YES);
+        weakSelf.completionBlock = nil;
     }];
 }
 
@@ -135,7 +171,7 @@ static NSMutableArray *arrayOfAllocatedTours;
             {
                 
                 [self makeAppearAnimation:bubble];
-
+                
             }
             else
             {
@@ -143,6 +179,10 @@ static NSMutableArray *arrayOfAllocatedTours;
                 [self makeDismissAnimation:bubble];
                 
             }
+        }
+        if ([tour.bubblesArray count] == 0) {
+            tour.completionBlock(YES);
+            tour.completionBlock = nil;
         }
     }
 }
