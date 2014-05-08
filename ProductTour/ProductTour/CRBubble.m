@@ -325,7 +325,8 @@
     {
         float xPosition = CGRectGetMidX(self.attachedView.frame) - CGRectGetMinX(self.frame) +(CR_ARROW_SIZE)/2;
         CGAffineTransform rot = CGAffineTransformMakeRotation(M_PI);
-        CGAffineTransform trans = CGAffineTransformMakeTranslation(xPosition, [self size].height+CR_ARROW_SIZE);
+//        CGAffineTransform trans = CGAffineTransformMakeTranslation(xPosition, [self size].height+CR_ARROW_SIZE);
+        CGAffineTransform trans = CGAffineTransformMakeTranslation(xPosition, -20);
         [path applyTransform:rot];
         [path applyTransform:trans];
     }else if(self.arrowPosition==CRArrowPositionLeft)

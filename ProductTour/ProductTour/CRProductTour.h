@@ -15,6 +15,8 @@
 @interface CRProductTour : UIView
 
 @property (nonatomic, strong)  NSMutableArray *bubblesArray;
+@property BOOL activeAnimation;
+
 -(void)setBubbles:(NSMutableArray*)arrayOfBubbles;
 //-(void)setVisible:(bool)visible;
 -(BOOL)isVisible;

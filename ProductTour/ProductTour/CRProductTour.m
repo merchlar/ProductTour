@@ -14,13 +14,13 @@
 
 @interface CRProductTour ()
 
-@property (copy) void (^completionBlock)(BOOL finished);
+//@property (copy) void (^completionBlock)(BOOL finished);
 
 @end
 
 @implementation CRProductTour
 static BOOL tourVisible=YES;
-static BOOL activeAnimation=YES; //Active bubbles translations and animatins for dismiss/appear
+//static BOOL activeAnimation=YES; //Active bubbles translations and animatins for dismiss/appear
 static NSMutableArray *arrayOfAllocatedTours;
 
 - (id)initWithFrame:(CGRect)frame
@@ -30,7 +30,7 @@ static NSMutableArray *arrayOfAllocatedTours;
         self.bubblesArray = [[NSMutableArray alloc] init];
         [self setBackgroundColor:[UIColor clearColor]];
         [self setUserInteractionEnabled:NO];
-        
+        self.activeAnimation = YES;
     }
     if(arrayOfAllocatedTours==nil)
         arrayOfAllocatedTours = [[NSMutableArray alloc]init];
@@ -68,9 +68,9 @@ static NSMutableArray *arrayOfAllocatedTours;
     
     tourVisible=visible;
     
-    self.completionBlock = completion;
+//    self.completionBlock = completion;
     
-    [self refreshBubblesVisibility];
+    [self refreshBubblesVisibilityWithCompletion:completion];
 
 }
 
@@ -79,13 +79,13 @@ static NSMutableArray *arrayOfAllocatedTours;
     return tourVisible;
 }
 
--(void)makeDismissAnimation:(CRBubble*)bubble;
+-(void)makeDismissAnimation:(CRBubble*)bubble completion:(void(^)(BOOL finished))completion
 {
     
     __typeof(self) __weak weakSelf = self;
 
     
-    if(activeAnimation)
+    if(_activeAnimation)
     {
         CGAffineTransform moveTransform;
         if(bubble.arrowPosition == CRArrowPositionRight)
@@ -114,8 +114,8 @@ static NSMutableArray *arrayOfAllocatedTours;
                              [CATransaction begin];
                              
                              [CATransaction setCompletionBlock:^{
-                                 weakSelf.completionBlock(YES);
-                                 weakSelf.completionBlock = nil;
+                                 completion(YES);
+//                                 completion = nil;
                              }];
                              
                              CABasicAnimation* scaleDown2 = [CABasicAnimation animationWithKeyPath:@"transform"];
@@ -136,8 +136,8 @@ static NSMutableArray *arrayOfAllocatedTours;
                          animations:^{
                              [bubble setAlpha:0.0];
                          } completion:^(BOOL finished) {
-                             weakSelf.completionBlock(YES);
-                             weakSelf.completionBlock = nil;
+                             completion(YES);
+//                             completion = nil;
                          }];
     }
     
@@ -145,7 +145,7 @@ static NSMutableArray *arrayOfAllocatedTours;
     
 }
 
--(void)makeAppearAnimation:(CRBubble*)bubble;
+-(void)makeAppearAnimation:(CRBubble*)bubble completion:(void(^)(BOOL finished))completion;
 {
     
     __typeof(self) __weak weakSelf = self;
@@ -156,12 +156,12 @@ static NSMutableArray *arrayOfAllocatedTours;
     } completion:^(BOOL finished) {
         if (bubble.glowEnable)
             [bubble.attachedView startGlowingWithColor:bubble.glowColor intensity:1.0 duration:1.0 repeat:30];
-        weakSelf.completionBlock(YES);
-        weakSelf.completionBlock = nil;
+        completion(YES);
+//        completion = nil;
     }];
 }
 
--(void) refreshBubblesVisibility
+-(void) refreshBubblesVisibilityWithCompletion:(void(^)(BOOL finished))completion
 {
     for(CRProductTour *tour in arrayOfAllocatedTours)
     {
@@ -170,19 +170,19 @@ static NSMutableArray *arrayOfAllocatedTours;
             if(tourVisible)
             {
                 
-                [self makeAppearAnimation:bubble];
+                [self makeAppearAnimation:bubble completion:completion];
                 
             }
             else
             {
                 
-                [self makeDismissAnimation:bubble];
+                [self makeDismissAnimation:bubble completion:completion];
                 
             }
         }
         if ([tour.bubblesArray count] == 0) {
-            tour.completionBlock(YES);
-            tour.completionBlock = nil;
+            completion(YES);
+//            completion = nil;
         }
     }
 }
